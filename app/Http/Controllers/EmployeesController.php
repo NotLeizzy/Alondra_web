@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 use App\Models\Employee;
+use App\Models\Employees;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
-        return Employee::all();
+        return Employees::all();
     }
 
     public function store(Request $request)
@@ -20,15 +21,15 @@ class EmployeeController extends Controller
             'email' => 'required|email|unique:employees,email'
         ]);
 
-        return Employee::create($validated);
+        return Employees::create($validated);
     }
 
-    public function show(Employee $employee)
+    public function show(Employees $employee)
     {
         return $employee;
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, Employees $employee)
     {
         $validated = $request->validate([
             'first_name' => 'sometimes|required',
@@ -41,7 +42,7 @@ class EmployeeController extends Controller
         return $employee;
     }
 
-    public function destroy(Employee $employee)
+    public function destroy(Employees $employee)
     {
         $employee->delete();
         return response()->json(['message' => 'Deleted']);
