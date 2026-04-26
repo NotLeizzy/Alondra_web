@@ -3,11 +3,13 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
-class Stocks extends Model
+class Products extends Model
 {
-    protected $table = 'stocks';
+    protected $table = 'products';
     protected $fillable = [
-        'stocks_name',
+        'products_name',
+        'unit_code',
+        'color',
         'cost_price'
     ];
 

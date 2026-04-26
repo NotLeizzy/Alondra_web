@@ -3,28 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\StockIn;
-use App\Models\Stocks;
 use App\Models\Suppliers;
 use App\Models\Employees;
+use App\Models\Products;
 use Illuminate\Http\Request;
 
 class StockInController extends Controller
 {
     public function index()
     {
-        $stocks = Stocks::all();
+        $products = Products::all();
         $suppliers = Suppliers::all();
         $employees = Employees::all();
 
-        $stockins = StockIn::with(['stock', 'supplier', 'employee'])->get();
+        $stockins = StockIn::with(['product', 'supplier', 'employee'])->get();
 
-        return view('stock-in.index', compact('stocks', 'suppliers', 'employees', 'stockins'));
+        return view('stock-in.index', compact('products', 'suppliers', 'employees', 'stockins'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'stock_id' => 'required|exists:stocks,id',
+            'product_id' => 'required|exists:products,id',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'employee_id' => 'nullable|exists:employees,id',
             'quantity' => 'required|integer|min:1',
@@ -39,7 +39,7 @@ class StockInController extends Controller
     public function update(Request $request, StockIn $stockIn)
     {
         $validated = $request->validate([
-            'stock_id' => 'required|exists:stocks,id',
+            'product_id' => 'required|exists:products,id',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'employee_id' => 'nullable|exists:employees,id',
             'quantity' => 'required|integer|min:1',
