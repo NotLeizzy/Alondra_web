@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Employee;
 use App\Models\Employees;
 use Illuminate\Http\Request;
 
-class EmployeeController extends Controller
+class EmployeesController extends Controller
 {
     public function index()
     {

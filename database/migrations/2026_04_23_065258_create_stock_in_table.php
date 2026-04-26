@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stock_in', function (Blueprint $table) {
         $table->id();
 
-        $table->foreignId('products_id')
+        $table->foreignId('product_id')
             ->constrained('products')
             ->onDelete('cascade');
 

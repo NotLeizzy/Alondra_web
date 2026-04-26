@@ -19,14 +19,14 @@
                 <form method="POST" action="{{ route('stock-in.store') }}">
                     @csrf
 
-                    <!-- STOCK -->
+                    <!-- PRODUCT -->
                     <div class="mb-2">
-                        <label>Stock</label>
-                        <select name="stock_id" class="form-control" required>
-                            <option value="">Select Stock</option>
-                            @foreach($stocks as $stock)
-                                <option value="{{ $stock->id }}">
-                                    {{ $stock->stocks_name }}
+                        <label>Product</label>
+                        <select name="product_id" class="form-control" required>
+                            <option value="">Select Product</option>
+                            @foreach($products as $product)
+                                <option value="{{ $product->id }}">
+                                    {{ $product->products_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -87,7 +87,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Stock</th>
+                            <th>Product</th>
                             <th>Supplier</th>
                             <th>Employee</th>
                             <th>Quantity</th>
@@ -100,7 +100,7 @@
                         @forelse($stockins as $item)
                             <tr>
                                 <td>{{ $item->id }}</td>
-                                <td>{{ optional($item->stock)->stocks_name }}</td>
+                                <td>{{ $item->product->products_name }}</td>
                                 <td>{{ optional($item->supplier)->supplier_name ?? 'N/A' }}</td>
                                 <td>{{ optional($item->employee)->employee_name ?? 'N/A' }}</td>
                                 <td>{{ $item->quantity }}</td>

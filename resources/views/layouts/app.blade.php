@@ -117,10 +117,10 @@
                     <span class="menu-text">Stock In</span>
                 </a>
 
-                <a href="{{ route('stocks.index') }}"
-                    class="nav-link {{ request()->routeIs('stocks.*') ? 'active':'' }}">
+                <a href="{{ route('products.index') }}"
+                    class="nav-link {{ request()->routeIs('products.*') ? 'active':'' }}">
                     <i class="bi bi-box-seam"></i>
-                    <span class="menu-text">Stocks</span>
+                    <span class="menu-text">Products</span>
                 </a>
 
                 <a href="{{ route('employees.index') }}"

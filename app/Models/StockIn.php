@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Stocks;
+use App\Models\Products;
 use App\Models\Suppliers;
 use App\Models\Employees;
 
@@ -12,16 +12,16 @@ class StockIn extends Model
     protected $table = 'stock_in';
 
     protected $fillable = [
-        'stock_id',
+        'product_id',
         'supplier_id',
         'employee_id',
         'quantity',
         'selling_price'
     ];
 
-    public function stock()
+    public function product()
     {
-        return $this->belongsTo(Stocks::class, 'stock_id');
+        return $this->belongsTo(Products::class, 'product_id');
     }
 
     public function supplier()
