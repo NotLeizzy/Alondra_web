@@ -10,13 +10,26 @@ use Illuminate\Http\Request;
 
 class StockInController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $products = Products::all();
         $suppliers = Suppliers::all();
         $employees = Employees::all();
 
-        $stockins = StockIn::with(['product', 'supplier', 'employee'])->get();
+        $query = StockIn::with(['product', 'supplier', 'employee']);
+
+        // 🔍 SEARCH (product name + employee name)
+        if ($request->search) {
+            $query->whereHas('product', function ($q) use ($request) {
+                $q->where('products_name', 'like', '%' . $request->search . '%');
+            })
+                ->orWhereHas('employee', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $request->search . '%');
+                });
+        }
+
+        $stockins = $query->get();
 
         return view('stock-in.index', compact('products', 'suppliers', 'employees', 'stockins'));
     }
@@ -26,7 +39,7 @@ class StockInController extends Controller
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
             'supplier_id' => 'nullable|exists:suppliers,id',
-            'employee_id' => 'nullable|exists:employees,id',
+            'employee_id' => 'required|exists:employees,id',
             'quantity' => 'required|integer|min:1',
             'selling_price' => 'required|numeric|min:0'
         ]);
@@ -41,20 +54,20 @@ class StockInController extends Controller
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
             'supplier_id' => 'nullable|exists:suppliers,id',
-            'employee_id' => 'nullable|exists:employees,id',
+            'employee_id' => 'required|exists:employees,id',
             'quantity' => 'required|integer|min:1',
             'selling_price' => 'required|numeric|min:0'
         ]);
 
         $stockIn->update($validated);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Stock In updated successfully!');
     }
 
     public function destroy(StockIn $stockIn)
     {
         $stockIn->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Stock In deleted successfully!');
     }
 }

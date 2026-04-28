@@ -3,9 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Products;
-use App\Models\Suppliers;
-use App\Models\Employees;
 
 class StockIn extends Model
 {
@@ -16,21 +13,21 @@ class StockIn extends Model
         'supplier_id',
         'employee_id',
         'quantity',
-        'selling_price'
+        'selling_price', // ✅ ADDED SELLING PRICE
     ];
 
-    public function product()
+    public function Employee()
     {
-        return $this->belongsTo(Products::class, 'product_id');
+        return $this->belongsTo(Employees::class);
     }
 
-    public function supplier()
+    public function Product()
     {
-        return $this->belongsTo(Suppliers::class, 'supplier_id');
+        return $this->belongsTo(Products::class);
     }
 
-    public function employee()
+    public function Supplier()
     {
-        return $this->belongsTo(Employees::class, 'employee_id');
+        return $this->belongsTo(Suppliers::class);
     }
 }

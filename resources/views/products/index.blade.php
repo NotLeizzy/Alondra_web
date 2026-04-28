@@ -1,86 +1,149 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h5>Products</h5>
+        <h2 class="fw-bold mb-0">
+            Products
+        </h2>
     </x-slot>
 
-    <div class="container">
+    <div class="container-fluid">
 
-        <!-- CREATE FORM -->
-        <div class="card mb-4">
-            <div class="card-body">
+        @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
 
-                <form method="POST" action="{{ route('products.store') }}">
-                    @csrf
+        <div class="card shadow-sm border-0 rounded-4">
 
-                    <div class="mb-2">
-                        <label>Product Name</label>
-                        <input type="text" name="products_name" class="form-control" required>
+            <!-- HEADER -->
+            <div class="card-header bg-white p-4 border-0 d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h4 class="fw-bold mb-1">Product Management</h4>
+                    <small class="text-muted">Manage product inventory</small>
+                </div>
+
+                <button class="btn btn-primary rounded-pill px-4"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createProductModal">
+                    + Add Product
+                </button>
+
+            </div>
+
+            <!-- SEARCH -->
+            <div class="px-4 pb-4">
+
+                <form method="GET" action="{{ route('products.index') }}">
+                    <div class="input-group">
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control rounded-pill"
+                            placeholder="Search products..."
+                            value="{{ request('search') }}">
+
+                        <button type="submit" class="btn btn-primary rounded-pill ms-2 px-4">
+                            Search
+                        </button>
+
                     </div>
-
-                    <div class="mb-2">
-                        <label>Unit <Code></Code></label>
-                        <input type="text" name="unit_code" class="form-control" required>
-                    </div>
-
-                    <div class="mb-2">
-                        <label>Color</label>
-                        <input type="text" name="color" class="form-control" required>
-
-                        <div class="mb-2">
-                            <label>Cost Price</label>
-                            <input type="number" name="cost_price" class="form-control" step="0.01" required>
-                        </div>
-
-                        <button class="btn btn-primary">Add Stock</button>
                 </form>
 
             </div>
-        </div>
 
-        <!-- TABLE -->
-        <div class="card">
-            <div class="card-body">
+            <!-- TABLE -->
+            <div class="table-responsive">
 
-                <table class="table table-bordered">
-                    <thead>
+                <table class="table align-middle mb-0">
+
+                    <thead class="table-light">
                         <tr>
                             <th>ID</th>
                             <th>Product Name</th>
                             <th>Unit Code</th>
+                            <th>Color</th>
                             <th>Cost Price</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach($products as $product)
+
+                        @forelse($products as $product)
+
                         <tr>
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->products_name }}</td>
                             <td>{{ $product->unit_code }}</td>
+                            <td>{{ $product->color }}</td>
                             <td>{{ $product->cost_price }}</td>
-                            <td>
 
+                            <td>
                                 <form method="POST" action="{{ route('products.destroy', $product->id) }}">
                                     @csrf
                                     @method('DELETE')
 
-                                    <button class="btn btn-danger btn-sm">
+                                    <button class="btn btn-sm btn-outline-danger">
                                         Delete
                                     </button>
                                 </form>
-
                             </td>
                         </tr>
-                        @endforeach
+
+                        @empty
+
+                        <tr>
+                            <td colspan="6" class="text-center p-4">
+                                No products found.
+                            </td>
+                        </tr>
+
+                        @endforelse
+
                     </tbody>
 
                 </table>
 
             </div>
+
         </div>
 
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal fade" id="createProductModal">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-4">
+
+                <form method="POST" action="{{ route('products.store') }}">
+                    @csrf
+
+                    <div class="modal-header">
+                        <h5>Add Product</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <input name="products_name" class="form-control mb-3" placeholder="Product Name">
+                        <input name="unit_code" class="form-control mb-3" placeholder="Unit Code">
+                        <input name="color" class="form-control mb-3" placeholder="Color">
+                        <input name="cost_price" class="form-control" placeholder="Cost Price">
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary">Save</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
     </div>
 
 </x-app-layout>

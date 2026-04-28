@@ -24,7 +24,6 @@ return new class extends Migration
             ->onDelete('cascade');
 
         $table->foreignId('employee_id')
-            ->nullable()
             ->constrained('employees')
             ->onDelete('cascade');
 

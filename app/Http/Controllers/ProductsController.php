@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Products::all();
+        $query = Products::query();
+
+        // SEARCH FUNCTION
+        if ($request->search) {
+            $query->where('products_name', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->get();
+
         return view('products.index', compact('products'));
     }
 
@@ -24,8 +32,9 @@ class ProductsController extends Controller
 
         Products::create($validated);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Product added successfully!');
     }
+
     public function show(Products $product)
     {
         return $product;
@@ -42,13 +51,13 @@ class ProductsController extends Controller
 
         $product->update($validated);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Product updated successfully!');
     }
 
     public function destroy(Products $product)
     {
         $product->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 }
