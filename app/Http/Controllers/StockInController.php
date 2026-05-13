@@ -6,6 +6,7 @@ use App\Models\StockIn;
 use App\Models\Suppliers;
 use App\Models\Employees;
 use App\Models\Products;
+use App\Models\ViewStockInSummary;
 use Illuminate\Http\Request;
 
 class StockInController extends Controller
@@ -16,20 +17,15 @@ class StockInController extends Controller
         $suppliers = Suppliers::all();
         $employees = Employees::all();
 
-        $query = StockIn::with(['product', 'supplier', 'employee']);
-
-        // 🔍 SEARCH (product name + employee name)
-        if ($request->search) {
-            $query->whereHas('product', function ($q) use ($request) {
-                $q->where('products_name', 'like', '%' . $request->search . '%');
-            })
-                ->orWhereHas('employee', function ($q) use ($request) {
-                    $q->where('first_name', 'like', '%' . $request->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $request->search . '%');
-                });
-        }
-
-        $stockins = $query->get();
+        $query = ViewStockInSummary::query();
+ 
+         // 🔍 SEARCH (product name + processed by)
+         if ($request->search) {
+             $query->where('products_name', 'like', '%' . $request->search . '%')
+                 ->orWhere('processed_by', 'like', '%' . $request->search . '%');
+         }
+ 
+         $stockins = $query->get();
 
         return view('stock-in.index', compact('products', 'suppliers', 'employees', 'stockins'));
     }

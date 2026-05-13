@@ -16,6 +16,15 @@ class StockIn extends Model
         'selling_price', // ✅ ADDED SELLING PRICE
     ];
 
+    protected static function booted()
+    {
+        static::saving(function ($stockIn) {
+            if ($stockIn->quantity <= 0) {
+                throw new \InvalidArgumentException('Error: Stock-in quantity must be 1 or greater.');
+            }
+        });
+    }
+
     public function Employee()
     {
         return $this->belongsTo(Employees::class);
